@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class DragDrop : MonoBehaviour
 {
+    public GameObject Canvas;
     private bool isDragging = false;
     private bool isOverDropZone = false;
     private GameObject dropZone;
+    private GameObject startParent; // "Parent" in this case will let us switch parents between canvas and drop zone when dragging cards
     private Vector2 startPosition;
+
+    private void Awake()
+    {
+        Canvas = GameObject.Find("Main Canvas");
+    }
 
     // Update is called once per frame
     void Update()
@@ -15,6 +22,7 @@ public class DragDrop : MonoBehaviour
         if (isDragging)
         {
             transform.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            transform.SetParent(Canvas.transform, true); // Sets transforms parent to the canvas declared above
         }
     }
 
@@ -47,6 +55,7 @@ public class DragDrop : MonoBehaviour
 
     public void StartDrag()
     {
+        startParent = transform.parent.gameObject;
         startPosition = transform.position;
         isDragging = true;
     }
@@ -61,6 +70,7 @@ public class DragDrop : MonoBehaviour
         else
         {
             transform.position = startPosition;
+            transform.SetParent(startParent.transform, false);
         }
     }
 }
